@@ -40,8 +40,6 @@ namespace FastPForLib {
  * patented.
  *
  */
-template <uint32_t BlockSizeInUnitsOfPackSize =
-              8> // BlockSizeInUnitsOfPackSize can have value 4 or 8
 class SIMDFastPFor : public IntegerCODEC {
 public:
   /**
@@ -59,6 +57,7 @@ public:
     overheadofeachexcept = 8,
     overheadduetobits = 8,
     overheadduetonmbrexcept = 8,
+    BlockSizeInUnitsOfPackSize = 4,
     BlockSize = BlockSizeInUnitsOfPackSize * PACKSIZE
   };
 

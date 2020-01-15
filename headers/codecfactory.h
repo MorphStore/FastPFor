@@ -102,9 +102,7 @@ static inline CodecMap initializefactory() {
   map["fastpfor256"] = std::shared_ptr<IntegerCODEC>(
       new CompositeCodec<FastPFor<8>, VariableByte>());
   map["simdfastpfor128"] = std::shared_ptr<IntegerCODEC>(
-      new CompositeCodec<SIMDFastPFor<4>, VariableByte>());
-  map["simdfastpfor256"] = std::shared_ptr<IntegerCODEC>(
-      new CompositeCodec<SIMDFastPFor<8>, VariableByte>());
+      new CompositeCodec<SIMDFastPFor, VariableByte>());
   map["simplepfor"] = std::shared_ptr<IntegerCODEC>(
       new CompositeCodec<SimplePFor<>, VariableByte>());
   map["simdsimplepfor"] = std::shared_ptr<IntegerCODEC>(
