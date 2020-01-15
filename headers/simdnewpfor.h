@@ -20,7 +20,7 @@
 #include "util.h"
 #include "codecs.h"
 #include "newpfor.h"
-#include "usimdbitpacking.h"
+#include "usimdbitpacking128.h"
 
 namespace FastPForLib {
 
@@ -266,7 +266,7 @@ SIMDNewPFor<BlockSizeInUnitsOfPackSize, ExceptionCoder>::decodeArray(
     in += encodedExceptionsSize;
 
     uint32_t *beginout(out); // we use this later
-    usimdunpack(reinterpret_cast<const __m128i *>(in), out, b);
+    usimd128unpack(reinterpret_cast<const __m128i *>(in), out, b);
     in += 4 * b;
     out += 128;
 

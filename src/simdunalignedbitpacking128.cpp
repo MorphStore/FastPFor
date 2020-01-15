@@ -4,18 +4,18 @@
  *
  * (c) Daniel Lemire
  */
-#include "usimdbitpacking.h"
+#include "usimdbitpacking128.h"
 
 namespace FastPForLib {
 
 using namespace std;
 
-static void SIMD_nullunpacker32(const __m128i *__restrict__,
+static void SIMD128_nullunpacker32(const __m128i *__restrict__,
                                 uint32_t *__restrict__ out) {
   memset(out, 0, 32 * 4 * 4);
 }
 
-static void __SIMD_fastpackwithoutmask1_32(const uint32_t *__restrict__ _in,
+static void __SIMD128_fastpackwithoutmask1_32(const uint32_t *__restrict__ _in,
                                            __m128i *__restrict__ out) {
   const __m128i *in = reinterpret_cast<const __m128i *>(_in);
   __m128i OutReg;
@@ -118,7 +118,7 @@ static void __SIMD_fastpackwithoutmask1_32(const uint32_t *__restrict__ _in,
   _mm_storeu_si128(out, OutReg);
 }
 
-static void __SIMD_fastpackwithoutmask2_32(const uint32_t *__restrict__ _in,
+static void __SIMD128_fastpackwithoutmask2_32(const uint32_t *__restrict__ _in,
                                            __m128i *__restrict__ out) {
   const __m128i *in = reinterpret_cast<const __m128i *>(_in);
   __m128i OutReg;
@@ -223,7 +223,7 @@ static void __SIMD_fastpackwithoutmask2_32(const uint32_t *__restrict__ _in,
   _mm_storeu_si128(out, OutReg);
 }
 
-static void __SIMD_fastpackwithoutmask3_32(const uint32_t *__restrict__ _in,
+static void __SIMD128_fastpackwithoutmask3_32(const uint32_t *__restrict__ _in,
                                            __m128i *__restrict__ out) {
   const __m128i *in = reinterpret_cast<const __m128i *>(_in);
   __m128i OutReg;
@@ -332,7 +332,7 @@ static void __SIMD_fastpackwithoutmask3_32(const uint32_t *__restrict__ _in,
   _mm_storeu_si128(out, OutReg);
 }
 
-static void __SIMD_fastpackwithoutmask5_32(const uint32_t *__restrict__ _in,
+static void __SIMD128_fastpackwithoutmask5_32(const uint32_t *__restrict__ _in,
                                            __m128i *__restrict__ out) {
   const __m128i *in = reinterpret_cast<const __m128i *>(_in);
   __m128i OutReg;
@@ -447,7 +447,7 @@ static void __SIMD_fastpackwithoutmask5_32(const uint32_t *__restrict__ _in,
   _mm_storeu_si128(out, OutReg);
 }
 
-static void __SIMD_fastpackwithoutmask6_32(const uint32_t *__restrict__ _in,
+static void __SIMD128_fastpackwithoutmask6_32(const uint32_t *__restrict__ _in,
                                            __m128i *__restrict__ out) {
   const __m128i *in = reinterpret_cast<const __m128i *>(_in);
   __m128i OutReg;
@@ -564,7 +564,7 @@ static void __SIMD_fastpackwithoutmask6_32(const uint32_t *__restrict__ _in,
   _mm_storeu_si128(out, OutReg);
 }
 
-static void __SIMD_fastpackwithoutmask7_32(const uint32_t *__restrict__ _in,
+static void __SIMD128_fastpackwithoutmask7_32(const uint32_t *__restrict__ _in,
                                            __m128i *__restrict__ out) {
   const __m128i *in = reinterpret_cast<const __m128i *>(_in);
   __m128i OutReg;
@@ -685,7 +685,7 @@ static void __SIMD_fastpackwithoutmask7_32(const uint32_t *__restrict__ _in,
   _mm_storeu_si128(out, OutReg);
 }
 
-static void __SIMD_fastpackwithoutmask9_32(const uint32_t *__restrict__ _in,
+static void __SIMD128_fastpackwithoutmask9_32(const uint32_t *__restrict__ _in,
                                            __m128i *__restrict__ out) {
   const __m128i *in = reinterpret_cast<const __m128i *>(_in);
   __m128i OutReg;
@@ -812,7 +812,7 @@ static void __SIMD_fastpackwithoutmask9_32(const uint32_t *__restrict__ _in,
   _mm_storeu_si128(out, OutReg);
 }
 
-static void __SIMD_fastpackwithoutmask10_32(const uint32_t *__restrict__ _in,
+static void __SIMD128_fastpackwithoutmask10_32(const uint32_t *__restrict__ _in,
                                             __m128i *__restrict__ out) {
   const __m128i *in = reinterpret_cast<const __m128i *>(_in);
   __m128i OutReg;
@@ -941,7 +941,7 @@ static void __SIMD_fastpackwithoutmask10_32(const uint32_t *__restrict__ _in,
   _mm_storeu_si128(out, OutReg);
 }
 
-static void __SIMD_fastpackwithoutmask11_32(const uint32_t *__restrict__ _in,
+static void __SIMD128_fastpackwithoutmask11_32(const uint32_t *__restrict__ _in,
                                             __m128i *__restrict__ out) {
   const __m128i *in = reinterpret_cast<const __m128i *>(_in);
   __m128i OutReg;
@@ -1074,7 +1074,7 @@ static void __SIMD_fastpackwithoutmask11_32(const uint32_t *__restrict__ _in,
   _mm_storeu_si128(out, OutReg);
 }
 
-static void __SIMD_fastpackwithoutmask12_32(const uint32_t *__restrict__ _in,
+static void __SIMD128_fastpackwithoutmask12_32(const uint32_t *__restrict__ _in,
                                             __m128i *__restrict__ out) {
   const __m128i *in = reinterpret_cast<const __m128i *>(_in);
   __m128i OutReg;
@@ -1207,7 +1207,7 @@ static void __SIMD_fastpackwithoutmask12_32(const uint32_t *__restrict__ _in,
   _mm_storeu_si128(out, OutReg);
 }
 
-static void __SIMD_fastpackwithoutmask13_32(const uint32_t *__restrict__ _in,
+static void __SIMD128_fastpackwithoutmask13_32(const uint32_t *__restrict__ _in,
                                             __m128i *__restrict__ out) {
   const __m128i *in = reinterpret_cast<const __m128i *>(_in);
   __m128i OutReg;
@@ -1346,7 +1346,7 @@ static void __SIMD_fastpackwithoutmask13_32(const uint32_t *__restrict__ _in,
   _mm_storeu_si128(out, OutReg);
 }
 
-static void __SIMD_fastpackwithoutmask14_32(const uint32_t *__restrict__ _in,
+static void __SIMD128_fastpackwithoutmask14_32(const uint32_t *__restrict__ _in,
                                             __m128i *__restrict__ out) {
   const __m128i *in = reinterpret_cast<const __m128i *>(_in);
   __m128i OutReg;
@@ -1487,7 +1487,7 @@ static void __SIMD_fastpackwithoutmask14_32(const uint32_t *__restrict__ _in,
   _mm_storeu_si128(out, OutReg);
 }
 
-static void __SIMD_fastpackwithoutmask15_32(const uint32_t *__restrict__ _in,
+static void __SIMD128_fastpackwithoutmask15_32(const uint32_t *__restrict__ _in,
                                             __m128i *__restrict__ out) {
   const __m128i *in = reinterpret_cast<const __m128i *>(_in);
   __m128i OutReg;
@@ -1632,7 +1632,7 @@ static void __SIMD_fastpackwithoutmask15_32(const uint32_t *__restrict__ _in,
   _mm_storeu_si128(out, OutReg);
 }
 
-static void __SIMD_fastpackwithoutmask17_32(const uint32_t *__restrict__ _in,
+static void __SIMD128_fastpackwithoutmask17_32(const uint32_t *__restrict__ _in,
                                             __m128i *__restrict__ out) {
   const __m128i *in = reinterpret_cast<const __m128i *>(_in);
   __m128i OutReg;
@@ -1783,7 +1783,7 @@ static void __SIMD_fastpackwithoutmask17_32(const uint32_t *__restrict__ _in,
   _mm_storeu_si128(out, OutReg);
 }
 
-static void __SIMD_fastpackwithoutmask18_32(const uint32_t *__restrict__ _in,
+static void __SIMD128_fastpackwithoutmask18_32(const uint32_t *__restrict__ _in,
                                             __m128i *__restrict__ out) {
   const __m128i *in = reinterpret_cast<const __m128i *>(_in);
   __m128i OutReg;
@@ -1936,7 +1936,7 @@ static void __SIMD_fastpackwithoutmask18_32(const uint32_t *__restrict__ _in,
   _mm_storeu_si128(out, OutReg);
 }
 
-static void __SIMD_fastpackwithoutmask19_32(const uint32_t *__restrict__ _in,
+static void __SIMD128_fastpackwithoutmask19_32(const uint32_t *__restrict__ _in,
                                             __m128i *__restrict__ out) {
   const __m128i *in = reinterpret_cast<const __m128i *>(_in);
   __m128i OutReg;
@@ -2093,7 +2093,7 @@ static void __SIMD_fastpackwithoutmask19_32(const uint32_t *__restrict__ _in,
   _mm_storeu_si128(out, OutReg);
 }
 
-static void __SIMD_fastpackwithoutmask20_32(const uint32_t *__restrict__ _in,
+static void __SIMD128_fastpackwithoutmask20_32(const uint32_t *__restrict__ _in,
                                             __m128i *__restrict__ out) {
   const __m128i *in = reinterpret_cast<const __m128i *>(_in);
   __m128i OutReg;
@@ -2250,7 +2250,7 @@ static void __SIMD_fastpackwithoutmask20_32(const uint32_t *__restrict__ _in,
   _mm_storeu_si128(out, OutReg);
 }
 
-static void __SIMD_fastpackwithoutmask21_32(const uint32_t *__restrict__ _in,
+static void __SIMD128_fastpackwithoutmask21_32(const uint32_t *__restrict__ _in,
                                             __m128i *__restrict__ out) {
   const __m128i *in = reinterpret_cast<const __m128i *>(_in);
   __m128i OutReg;
@@ -2413,7 +2413,7 @@ static void __SIMD_fastpackwithoutmask21_32(const uint32_t *__restrict__ _in,
   _mm_storeu_si128(out, OutReg);
 }
 
-static void __SIMD_fastpackwithoutmask22_32(const uint32_t *__restrict__ _in,
+static void __SIMD128_fastpackwithoutmask22_32(const uint32_t *__restrict__ _in,
                                             __m128i *__restrict__ out) {
   const __m128i *in = reinterpret_cast<const __m128i *>(_in);
   __m128i OutReg;
@@ -2578,7 +2578,7 @@ static void __SIMD_fastpackwithoutmask22_32(const uint32_t *__restrict__ _in,
   _mm_storeu_si128(out, OutReg);
 }
 
-static void __SIMD_fastpackwithoutmask23_32(const uint32_t *__restrict__ _in,
+static void __SIMD128_fastpackwithoutmask23_32(const uint32_t *__restrict__ _in,
                                             __m128i *__restrict__ out) {
   const __m128i *in = reinterpret_cast<const __m128i *>(_in);
   __m128i OutReg;
@@ -2747,7 +2747,7 @@ static void __SIMD_fastpackwithoutmask23_32(const uint32_t *__restrict__ _in,
   _mm_storeu_si128(out, OutReg);
 }
 
-static void __SIMD_fastpackwithoutmask24_32(const uint32_t *__restrict__ _in,
+static void __SIMD128_fastpackwithoutmask24_32(const uint32_t *__restrict__ _in,
                                             __m128i *__restrict__ out) {
   const __m128i *in = reinterpret_cast<const __m128i *>(_in);
   __m128i OutReg;
@@ -2912,7 +2912,7 @@ static void __SIMD_fastpackwithoutmask24_32(const uint32_t *__restrict__ _in,
   _mm_storeu_si128(out, OutReg);
 }
 
-static void __SIMD_fastpackwithoutmask25_32(const uint32_t *__restrict__ _in,
+static void __SIMD128_fastpackwithoutmask25_32(const uint32_t *__restrict__ _in,
                                             __m128i *__restrict__ out) {
   const __m128i *in = reinterpret_cast<const __m128i *>(_in);
   __m128i OutReg;
@@ -3087,7 +3087,7 @@ static void __SIMD_fastpackwithoutmask25_32(const uint32_t *__restrict__ _in,
   _mm_storeu_si128(out, OutReg);
 }
 
-static void __SIMD_fastpackwithoutmask26_32(const uint32_t *__restrict__ _in,
+static void __SIMD128_fastpackwithoutmask26_32(const uint32_t *__restrict__ _in,
                                             __m128i *__restrict__ out) {
   const __m128i *in = reinterpret_cast<const __m128i *>(_in);
   __m128i OutReg;
@@ -3264,7 +3264,7 @@ static void __SIMD_fastpackwithoutmask26_32(const uint32_t *__restrict__ _in,
   _mm_storeu_si128(out, OutReg);
 }
 
-static void __SIMD_fastpackwithoutmask27_32(const uint32_t *__restrict__ _in,
+static void __SIMD128_fastpackwithoutmask27_32(const uint32_t *__restrict__ _in,
                                             __m128i *__restrict__ out) {
   const __m128i *in = reinterpret_cast<const __m128i *>(_in);
   __m128i OutReg;
@@ -3445,7 +3445,7 @@ static void __SIMD_fastpackwithoutmask27_32(const uint32_t *__restrict__ _in,
   _mm_storeu_si128(out, OutReg);
 }
 
-static void __SIMD_fastpackwithoutmask28_32(const uint32_t *__restrict__ _in,
+static void __SIMD128_fastpackwithoutmask28_32(const uint32_t *__restrict__ _in,
                                             __m128i *__restrict__ out) {
   const __m128i *in = reinterpret_cast<const __m128i *>(_in);
   __m128i OutReg;
@@ -3626,7 +3626,7 @@ static void __SIMD_fastpackwithoutmask28_32(const uint32_t *__restrict__ _in,
   _mm_storeu_si128(out, OutReg);
 }
 
-static void __SIMD_fastpackwithoutmask29_32(const uint32_t *__restrict__ _in,
+static void __SIMD128_fastpackwithoutmask29_32(const uint32_t *__restrict__ _in,
                                             __m128i *__restrict__ out) {
   const __m128i *in = reinterpret_cast<const __m128i *>(_in);
   __m128i OutReg;
@@ -3813,7 +3813,7 @@ static void __SIMD_fastpackwithoutmask29_32(const uint32_t *__restrict__ _in,
   _mm_storeu_si128(out, OutReg);
 }
 
-static void __SIMD_fastpackwithoutmask30_32(const uint32_t *__restrict__ _in,
+static void __SIMD128_fastpackwithoutmask30_32(const uint32_t *__restrict__ _in,
                                             __m128i *__restrict__ out) {
   const __m128i *in = reinterpret_cast<const __m128i *>(_in);
   __m128i OutReg;
@@ -4002,7 +4002,7 @@ static void __SIMD_fastpackwithoutmask30_32(const uint32_t *__restrict__ _in,
   _mm_storeu_si128(out, OutReg);
 }
 
-static void __SIMD_fastpackwithoutmask31_32(const uint32_t *__restrict__ _in,
+static void __SIMD128_fastpackwithoutmask31_32(const uint32_t *__restrict__ _in,
                                             __m128i *__restrict__ out) {
   const __m128i *in = reinterpret_cast<const __m128i *>(_in);
   __m128i OutReg;
@@ -4195,7 +4195,7 @@ static void __SIMD_fastpackwithoutmask31_32(const uint32_t *__restrict__ _in,
   _mm_storeu_si128(out, OutReg);
 }
 
-static void __SIMD_fastpackwithoutmask32_32(const uint32_t *__restrict__ _in,
+static void __SIMD128_fastpackwithoutmask32_32(const uint32_t *__restrict__ _in,
                                             __m128i *__restrict__ out) {
   const __m128i *in = reinterpret_cast<const __m128i *>(_in);
   __m128i OutReg;
@@ -4360,7 +4360,7 @@ static void __SIMD_fastpackwithoutmask32_32(const uint32_t *__restrict__ _in,
   _mm_storeu_si128(out, OutReg);
 }
 
-static void __SIMD_fastpackwithoutmask4_32(const uint32_t *__restrict__ _in,
+static void __SIMD128_fastpackwithoutmask4_32(const uint32_t *__restrict__ _in,
                                            __m128i *__restrict__ out) {
   const __m128i *in = reinterpret_cast<const __m128i *>(_in);
   __m128i OutReg;
@@ -4397,7 +4397,7 @@ static void __SIMD_fastpackwithoutmask4_32(const uint32_t *__restrict__ _in,
   }
 }
 
-static void __SIMD_fastpackwithoutmask8_32(const uint32_t *__restrict__ _in,
+static void __SIMD128_fastpackwithoutmask8_32(const uint32_t *__restrict__ _in,
                                            __m128i *__restrict__ out) {
   const __m128i *in = reinterpret_cast<const __m128i *>(_in);
   __m128i OutReg;
@@ -4422,7 +4422,7 @@ static void __SIMD_fastpackwithoutmask8_32(const uint32_t *__restrict__ _in,
   }
 }
 
-static void __SIMD_fastpackwithoutmask16_32(const uint32_t *__restrict__ _in,
+static void __SIMD128_fastpackwithoutmask16_32(const uint32_t *__restrict__ _in,
                                             __m128i *__restrict__ out) {
   const __m128i *in = reinterpret_cast<const __m128i *>(_in);
   __m128i OutReg;
@@ -8923,7 +8923,7 @@ static void __SIMD_fastpack16_32(const uint32_t *__restrict__ _in,
   }
 }
 
-static void __SIMD_fastunpack1_32(const __m128i *__restrict__ in,
+static void __SIMD128_fastunpack1_32(const __m128i *__restrict__ in,
                                   uint32_t *__restrict__ _out) {
   __m128i *out = reinterpret_cast<__m128i *>(_out);
   __m128i InReg1 = _mm_loadu_si128(in);
@@ -8945,7 +8945,7 @@ static void __SIMD_fastunpack1_32(const __m128i *__restrict__ in,
   }
 }
 
-static void __SIMD_fastunpack2_32(const __m128i *__restrict__ in,
+static void __SIMD128_fastunpack2_32(const __m128i *__restrict__ in,
                                   uint32_t *__restrict__ _out) {
 
   __m128i *out = reinterpret_cast<__m128i *>(_out);
@@ -9052,7 +9052,7 @@ static void __SIMD_fastunpack2_32(const __m128i *__restrict__ in,
   _mm_storeu_si128(out++, OutReg);
 }
 
-static void __SIMD_fastunpack3_32(const __m128i *__restrict__ in,
+static void __SIMD128_fastunpack3_32(const __m128i *__restrict__ in,
                                   uint32_t *__restrict__ _out) {
 
   __m128i *out = reinterpret_cast<__m128i *>(_out);
@@ -9165,7 +9165,7 @@ static void __SIMD_fastunpack3_32(const __m128i *__restrict__ in,
   _mm_storeu_si128(out++, OutReg);
 }
 
-static void __SIMD_fastunpack4_32(const __m128i *__restrict__ in,
+static void __SIMD128_fastunpack4_32(const __m128i *__restrict__ in,
                                   uint32_t *__restrict__ _out) {
 
   __m128i *out = reinterpret_cast<__m128i *>(_out);
@@ -9276,7 +9276,7 @@ static void __SIMD_fastunpack4_32(const __m128i *__restrict__ in,
   _mm_storeu_si128(out++, OutReg);
 }
 
-static void __SIMD_fastunpack5_32(const __m128i *__restrict__ in,
+static void __SIMD128_fastunpack5_32(const __m128i *__restrict__ in,
                                   uint32_t *__restrict__ _out) {
 
   __m128i *out = reinterpret_cast<__m128i *>(_out);
@@ -9397,7 +9397,7 @@ static void __SIMD_fastunpack5_32(const __m128i *__restrict__ in,
   _mm_storeu_si128(out++, OutReg);
 }
 
-static void __SIMD_fastunpack6_32(const __m128i *__restrict__ in,
+static void __SIMD128_fastunpack6_32(const __m128i *__restrict__ in,
                                   uint32_t *__restrict__ _out) {
 
   __m128i *out = reinterpret_cast<__m128i *>(_out);
@@ -9520,7 +9520,7 @@ static void __SIMD_fastunpack6_32(const __m128i *__restrict__ in,
   _mm_storeu_si128(out++, OutReg);
 }
 
-static void __SIMD_fastunpack7_32(const __m128i *__restrict__ in,
+static void __SIMD128_fastunpack7_32(const __m128i *__restrict__ in,
                                   uint32_t *__restrict__ _out) {
 
   __m128i *out = reinterpret_cast<__m128i *>(_out);
@@ -9649,7 +9649,7 @@ static void __SIMD_fastunpack7_32(const __m128i *__restrict__ in,
   _mm_storeu_si128(out++, OutReg);
 }
 
-static void __SIMD_fastunpack8_32(const __m128i *__restrict__ in,
+static void __SIMD128_fastunpack8_32(const __m128i *__restrict__ in,
                                   uint32_t *__restrict__ _out) {
 
   __m128i *out = reinterpret_cast<__m128i *>(_out);
@@ -9768,7 +9768,7 @@ static void __SIMD_fastunpack8_32(const __m128i *__restrict__ in,
   _mm_storeu_si128(out++, OutReg);
 }
 
-static void __SIMD_fastunpack9_32(const __m128i *__restrict__ in,
+static void __SIMD128_fastunpack9_32(const __m128i *__restrict__ in,
                                   uint32_t *__restrict__ _out) {
 
   __m128i *out = reinterpret_cast<__m128i *>(_out);
@@ -9905,7 +9905,7 @@ static void __SIMD_fastunpack9_32(const __m128i *__restrict__ in,
   _mm_storeu_si128(out++, OutReg);
 }
 
-static void __SIMD_fastunpack10_32(const __m128i *__restrict__ in,
+static void __SIMD128_fastunpack10_32(const __m128i *__restrict__ in,
                                    uint32_t *__restrict__ _out) {
 
   __m128i *out = reinterpret_cast<__m128i *>(_out);
@@ -10044,7 +10044,7 @@ static void __SIMD_fastunpack10_32(const __m128i *__restrict__ in,
   _mm_storeu_si128(out++, OutReg);
 }
 
-static void __SIMD_fastunpack11_32(const __m128i *__restrict__ in,
+static void __SIMD128_fastunpack11_32(const __m128i *__restrict__ in,
                                    uint32_t *__restrict__ _out) {
 
   __m128i *out = reinterpret_cast<__m128i *>(_out);
@@ -10189,7 +10189,7 @@ static void __SIMD_fastunpack11_32(const __m128i *__restrict__ in,
   _mm_storeu_si128(out++, OutReg);
 }
 
-static void __SIMD_fastunpack12_32(const __m128i *__restrict__ in,
+static void __SIMD128_fastunpack12_32(const __m128i *__restrict__ in,
                                    uint32_t *__restrict__ _out) {
 
   __m128i *out = reinterpret_cast<__m128i *>(_out);
@@ -10332,7 +10332,7 @@ static void __SIMD_fastunpack12_32(const __m128i *__restrict__ in,
   _mm_storeu_si128(out++, OutReg);
 }
 
-static void __SIMD_fastunpack13_32(const __m128i *__restrict__ in,
+static void __SIMD128_fastunpack13_32(const __m128i *__restrict__ in,
                                    uint32_t *__restrict__ _out) {
 
   __m128i *out = reinterpret_cast<__m128i *>(_out);
@@ -10485,7 +10485,7 @@ static void __SIMD_fastunpack13_32(const __m128i *__restrict__ in,
   _mm_storeu_si128(out++, OutReg);
 }
 
-static void __SIMD_fastunpack14_32(const __m128i *__restrict__ in,
+static void __SIMD128_fastunpack14_32(const __m128i *__restrict__ in,
                                    uint32_t *__restrict__ _out) {
 
   __m128i *out = reinterpret_cast<__m128i *>(_out);
@@ -10640,7 +10640,7 @@ static void __SIMD_fastunpack14_32(const __m128i *__restrict__ in,
   _mm_storeu_si128(out++, OutReg);
 }
 
-static void __SIMD_fastunpack15_32(const __m128i *__restrict__ in,
+static void __SIMD128_fastunpack15_32(const __m128i *__restrict__ in,
                                    uint32_t *__restrict__ _out) {
 
   __m128i *out = reinterpret_cast<__m128i *>(_out);
@@ -10801,7 +10801,7 @@ static void __SIMD_fastunpack15_32(const __m128i *__restrict__ in,
   _mm_storeu_si128(out++, OutReg);
 }
 
-static void __SIMD_fastunpack16_32(const __m128i *__restrict__ in,
+static void __SIMD128_fastunpack16_32(const __m128i *__restrict__ in,
                                    uint32_t *__restrict__ _out) {
 
   __m128i *out = reinterpret_cast<__m128i *>(_out);
@@ -10936,7 +10936,7 @@ static void __SIMD_fastunpack16_32(const __m128i *__restrict__ in,
   _mm_storeu_si128(out++, OutReg);
 }
 
-static void __SIMD_fastunpack17_32(const __m128i *__restrict__ in,
+static void __SIMD128_fastunpack17_32(const __m128i *__restrict__ in,
                                    uint32_t *__restrict__ _out) {
 
   __m128i *out = reinterpret_cast<__m128i *>(_out);
@@ -11105,7 +11105,7 @@ static void __SIMD_fastunpack17_32(const __m128i *__restrict__ in,
   _mm_storeu_si128(out++, OutReg);
 }
 
-static void __SIMD_fastunpack18_32(const __m128i *__restrict__ in,
+static void __SIMD128_fastunpack18_32(const __m128i *__restrict__ in,
                                    uint32_t *__restrict__ _out) {
 
   __m128i *out = reinterpret_cast<__m128i *>(_out);
@@ -11276,7 +11276,7 @@ static void __SIMD_fastunpack18_32(const __m128i *__restrict__ in,
   _mm_storeu_si128(out++, OutReg);
 }
 
-static void __SIMD_fastunpack19_32(const __m128i *__restrict__ in,
+static void __SIMD128_fastunpack19_32(const __m128i *__restrict__ in,
                                    uint32_t *__restrict__ _out) {
 
   __m128i *out = reinterpret_cast<__m128i *>(_out);
@@ -11453,7 +11453,7 @@ static void __SIMD_fastunpack19_32(const __m128i *__restrict__ in,
   _mm_storeu_si128(out++, OutReg);
 }
 
-static void __SIMD_fastunpack20_32(const __m128i *__restrict__ in,
+static void __SIMD128_fastunpack20_32(const __m128i *__restrict__ in,
                                    uint32_t *__restrict__ _out) {
 
   __m128i *out = reinterpret_cast<__m128i *>(_out);
@@ -11628,7 +11628,7 @@ static void __SIMD_fastunpack20_32(const __m128i *__restrict__ in,
   _mm_storeu_si128(out++, OutReg);
 }
 
-static void __SIMD_fastunpack21_32(const __m128i *__restrict__ in,
+static void __SIMD128_fastunpack21_32(const __m128i *__restrict__ in,
                                    uint32_t *__restrict__ _out) {
 
   __m128i *out = reinterpret_cast<__m128i *>(_out);
@@ -11813,7 +11813,7 @@ static void __SIMD_fastunpack21_32(const __m128i *__restrict__ in,
   _mm_storeu_si128(out++, OutReg);
 }
 
-static void __SIMD_fastunpack22_32(const __m128i *__restrict__ in,
+static void __SIMD128_fastunpack22_32(const __m128i *__restrict__ in,
                                    uint32_t *__restrict__ _out) {
 
   __m128i *out = reinterpret_cast<__m128i *>(_out);
@@ -12000,7 +12000,7 @@ static void __SIMD_fastunpack22_32(const __m128i *__restrict__ in,
   _mm_storeu_si128(out++, OutReg);
 }
 
-static void __SIMD_fastunpack23_32(const __m128i *__restrict__ in,
+static void __SIMD128_fastunpack23_32(const __m128i *__restrict__ in,
                                    uint32_t *__restrict__ _out) {
 
   __m128i *out = reinterpret_cast<__m128i *>(_out);
@@ -12193,7 +12193,7 @@ static void __SIMD_fastunpack23_32(const __m128i *__restrict__ in,
   _mm_storeu_si128(out++, OutReg);
 }
 
-static void __SIMD_fastunpack24_32(const __m128i *__restrict__ in,
+static void __SIMD128_fastunpack24_32(const __m128i *__restrict__ in,
                                    uint32_t *__restrict__ _out) {
 
   __m128i *out = reinterpret_cast<__m128i *>(_out);
@@ -12376,7 +12376,7 @@ static void __SIMD_fastunpack24_32(const __m128i *__restrict__ in,
   _mm_storeu_si128(out++, OutReg);
 }
 
-static void __SIMD_fastunpack25_32(const __m128i *__restrict__ in,
+static void __SIMD128_fastunpack25_32(const __m128i *__restrict__ in,
                                    uint32_t *__restrict__ _out) {
 
   __m128i *out = reinterpret_cast<__m128i *>(_out);
@@ -12577,7 +12577,7 @@ static void __SIMD_fastunpack25_32(const __m128i *__restrict__ in,
   _mm_storeu_si128(out++, OutReg);
 }
 
-static void __SIMD_fastunpack26_32(const __m128i *__restrict__ in,
+static void __SIMD128_fastunpack26_32(const __m128i *__restrict__ in,
                                    uint32_t *__restrict__ _out) {
 
   __m128i *out = reinterpret_cast<__m128i *>(_out);
@@ -12780,7 +12780,7 @@ static void __SIMD_fastunpack26_32(const __m128i *__restrict__ in,
   _mm_storeu_si128(out++, OutReg);
 }
 
-static void __SIMD_fastunpack27_32(const __m128i *__restrict__ in,
+static void __SIMD128_fastunpack27_32(const __m128i *__restrict__ in,
                                    uint32_t *__restrict__ _out) {
 
   __m128i *out = reinterpret_cast<__m128i *>(_out);
@@ -12989,7 +12989,7 @@ static void __SIMD_fastunpack27_32(const __m128i *__restrict__ in,
   _mm_storeu_si128(out++, OutReg);
 }
 
-static void __SIMD_fastunpack28_32(const __m128i *__restrict__ in,
+static void __SIMD128_fastunpack28_32(const __m128i *__restrict__ in,
                                    uint32_t *__restrict__ _out) {
 
   __m128i *out = reinterpret_cast<__m128i *>(_out);
@@ -13196,7 +13196,7 @@ static void __SIMD_fastunpack28_32(const __m128i *__restrict__ in,
   _mm_storeu_si128(out++, OutReg);
 }
 
-static void __SIMD_fastunpack29_32(const __m128i *__restrict__ in,
+static void __SIMD128_fastunpack29_32(const __m128i *__restrict__ in,
                                    uint32_t *__restrict__ _out) {
 
   __m128i *out = reinterpret_cast<__m128i *>(_out);
@@ -13413,7 +13413,7 @@ static void __SIMD_fastunpack29_32(const __m128i *__restrict__ in,
   _mm_storeu_si128(out++, OutReg);
 }
 
-static void __SIMD_fastunpack30_32(const __m128i *__restrict__ in,
+static void __SIMD128_fastunpack30_32(const __m128i *__restrict__ in,
                                    uint32_t *__restrict__ _out) {
 
   __m128i *out = reinterpret_cast<__m128i *>(_out);
@@ -13632,7 +13632,7 @@ static void __SIMD_fastunpack30_32(const __m128i *__restrict__ in,
   _mm_storeu_si128(out++, OutReg);
 }
 
-static void __SIMD_fastunpack31_32(const __m128i *__restrict__ in,
+static void __SIMD128_fastunpack31_32(const __m128i *__restrict__ in,
                                    uint32_t *__restrict__ _out) {
 
   __m128i *out = reinterpret_cast<__m128i *>(_out);
@@ -13857,7 +13857,7 @@ static void __SIMD_fastunpack31_32(const __m128i *__restrict__ in,
   _mm_storeu_si128(out++, OutReg);
 }
 
-static void __SIMD_fastunpack32_32(const __m128i *__restrict__ in,
+static void __SIMD128_fastunpack32_32(const __m128i *__restrict__ in,
                                    uint32_t *__restrict__ _out) {
   __m128i *out = reinterpret_cast<__m128i *>(_out);
   for (uint32_t outer = 0; outer < 32; ++outer) {
@@ -13865,139 +13865,139 @@ static void __SIMD_fastunpack32_32(const __m128i *__restrict__ in,
   }
 }
 
-void usimdunpack(const __m128i *__restrict__ in, uint32_t *__restrict__ out,
+void usimd128unpack(const __m128i *__restrict__ in, uint32_t *__restrict__ out,
                  const uint32_t bit) {
   switch (bit) {
   case 0:
-    SIMD_nullunpacker32(in, out);
+    SIMD128_nullunpacker32(in, out);
     return;
 
   case 1:
-    __SIMD_fastunpack1_32(in, out);
+    __SIMD128_fastunpack1_32(in, out);
     return;
 
   case 2:
-    __SIMD_fastunpack2_32(in, out);
+    __SIMD128_fastunpack2_32(in, out);
     return;
 
   case 3:
-    __SIMD_fastunpack3_32(in, out);
+    __SIMD128_fastunpack3_32(in, out);
     return;
 
   case 4:
-    __SIMD_fastunpack4_32(in, out);
+    __SIMD128_fastunpack4_32(in, out);
     return;
 
   case 5:
-    __SIMD_fastunpack5_32(in, out);
+    __SIMD128_fastunpack5_32(in, out);
     return;
 
   case 6:
-    __SIMD_fastunpack6_32(in, out);
+    __SIMD128_fastunpack6_32(in, out);
     return;
 
   case 7:
-    __SIMD_fastunpack7_32(in, out);
+    __SIMD128_fastunpack7_32(in, out);
     return;
 
   case 8:
-    __SIMD_fastunpack8_32(in, out);
+    __SIMD128_fastunpack8_32(in, out);
     return;
 
   case 9:
-    __SIMD_fastunpack9_32(in, out);
+    __SIMD128_fastunpack9_32(in, out);
     return;
 
   case 10:
-    __SIMD_fastunpack10_32(in, out);
+    __SIMD128_fastunpack10_32(in, out);
     return;
 
   case 11:
-    __SIMD_fastunpack11_32(in, out);
+    __SIMD128_fastunpack11_32(in, out);
     return;
 
   case 12:
-    __SIMD_fastunpack12_32(in, out);
+    __SIMD128_fastunpack12_32(in, out);
     return;
 
   case 13:
-    __SIMD_fastunpack13_32(in, out);
+    __SIMD128_fastunpack13_32(in, out);
     return;
 
   case 14:
-    __SIMD_fastunpack14_32(in, out);
+    __SIMD128_fastunpack14_32(in, out);
     return;
 
   case 15:
-    __SIMD_fastunpack15_32(in, out);
+    __SIMD128_fastunpack15_32(in, out);
     return;
 
   case 16:
-    __SIMD_fastunpack16_32(in, out);
+    __SIMD128_fastunpack16_32(in, out);
     return;
 
   case 17:
-    __SIMD_fastunpack17_32(in, out);
+    __SIMD128_fastunpack17_32(in, out);
     return;
 
   case 18:
-    __SIMD_fastunpack18_32(in, out);
+    __SIMD128_fastunpack18_32(in, out);
     return;
 
   case 19:
-    __SIMD_fastunpack19_32(in, out);
+    __SIMD128_fastunpack19_32(in, out);
     return;
 
   case 20:
-    __SIMD_fastunpack20_32(in, out);
+    __SIMD128_fastunpack20_32(in, out);
     return;
 
   case 21:
-    __SIMD_fastunpack21_32(in, out);
+    __SIMD128_fastunpack21_32(in, out);
     return;
 
   case 22:
-    __SIMD_fastunpack22_32(in, out);
+    __SIMD128_fastunpack22_32(in, out);
     return;
 
   case 23:
-    __SIMD_fastunpack23_32(in, out);
+    __SIMD128_fastunpack23_32(in, out);
     return;
 
   case 24:
-    __SIMD_fastunpack24_32(in, out);
+    __SIMD128_fastunpack24_32(in, out);
     return;
 
   case 25:
-    __SIMD_fastunpack25_32(in, out);
+    __SIMD128_fastunpack25_32(in, out);
     return;
 
   case 26:
-    __SIMD_fastunpack26_32(in, out);
+    __SIMD128_fastunpack26_32(in, out);
     return;
 
   case 27:
-    __SIMD_fastunpack27_32(in, out);
+    __SIMD128_fastunpack27_32(in, out);
     return;
 
   case 28:
-    __SIMD_fastunpack28_32(in, out);
+    __SIMD128_fastunpack28_32(in, out);
     return;
 
   case 29:
-    __SIMD_fastunpack29_32(in, out);
+    __SIMD128_fastunpack29_32(in, out);
     return;
 
   case 30:
-    __SIMD_fastunpack30_32(in, out);
+    __SIMD128_fastunpack30_32(in, out);
     return;
 
   case 31:
-    __SIMD_fastunpack31_32(in, out);
+    __SIMD128_fastunpack31_32(in, out);
     return;
 
   case 32:
-    __SIMD_fastunpack32_32(in, out);
+    __SIMD128_fastunpack32_32(in, out);
     return;
 
   default:
@@ -14007,138 +14007,138 @@ void usimdunpack(const __m128i *__restrict__ in, uint32_t *__restrict__ out,
 }
 
 /*assumes that integers fit in the prescribed number of bits*/
-void usimdpackwithoutmask(const uint32_t *__restrict__ in,
+void usimd128packwithoutmask(const uint32_t *__restrict__ in,
                           __m128i *__restrict__ out, const uint32_t bit) {
   switch (bit) {
   case 0:
     return;
 
   case 1:
-    __SIMD_fastpackwithoutmask1_32(in, out);
+    __SIMD128_fastpackwithoutmask1_32(in, out);
     return;
 
   case 2:
-    __SIMD_fastpackwithoutmask2_32(in, out);
+    __SIMD128_fastpackwithoutmask2_32(in, out);
     return;
 
   case 3:
-    __SIMD_fastpackwithoutmask3_32(in, out);
+    __SIMD128_fastpackwithoutmask3_32(in, out);
     return;
 
   case 4:
-    __SIMD_fastpackwithoutmask4_32(in, out);
+    __SIMD128_fastpackwithoutmask4_32(in, out);
     return;
 
   case 5:
-    __SIMD_fastpackwithoutmask5_32(in, out);
+    __SIMD128_fastpackwithoutmask5_32(in, out);
     return;
 
   case 6:
-    __SIMD_fastpackwithoutmask6_32(in, out);
+    __SIMD128_fastpackwithoutmask6_32(in, out);
     return;
 
   case 7:
-    __SIMD_fastpackwithoutmask7_32(in, out);
+    __SIMD128_fastpackwithoutmask7_32(in, out);
     return;
 
   case 8:
-    __SIMD_fastpackwithoutmask8_32(in, out);
+    __SIMD128_fastpackwithoutmask8_32(in, out);
     return;
 
   case 9:
-    __SIMD_fastpackwithoutmask9_32(in, out);
+    __SIMD128_fastpackwithoutmask9_32(in, out);
     return;
 
   case 10:
-    __SIMD_fastpackwithoutmask10_32(in, out);
+    __SIMD128_fastpackwithoutmask10_32(in, out);
     return;
 
   case 11:
-    __SIMD_fastpackwithoutmask11_32(in, out);
+    __SIMD128_fastpackwithoutmask11_32(in, out);
     return;
 
   case 12:
-    __SIMD_fastpackwithoutmask12_32(in, out);
+    __SIMD128_fastpackwithoutmask12_32(in, out);
     return;
 
   case 13:
-    __SIMD_fastpackwithoutmask13_32(in, out);
+    __SIMD128_fastpackwithoutmask13_32(in, out);
     return;
 
   case 14:
-    __SIMD_fastpackwithoutmask14_32(in, out);
+    __SIMD128_fastpackwithoutmask14_32(in, out);
     return;
 
   case 15:
-    __SIMD_fastpackwithoutmask15_32(in, out);
+    __SIMD128_fastpackwithoutmask15_32(in, out);
     return;
 
   case 16:
-    __SIMD_fastpackwithoutmask16_32(in, out);
+    __SIMD128_fastpackwithoutmask16_32(in, out);
     return;
 
   case 17:
-    __SIMD_fastpackwithoutmask17_32(in, out);
+    __SIMD128_fastpackwithoutmask17_32(in, out);
     return;
 
   case 18:
-    __SIMD_fastpackwithoutmask18_32(in, out);
+    __SIMD128_fastpackwithoutmask18_32(in, out);
     return;
 
   case 19:
-    __SIMD_fastpackwithoutmask19_32(in, out);
+    __SIMD128_fastpackwithoutmask19_32(in, out);
     return;
 
   case 20:
-    __SIMD_fastpackwithoutmask20_32(in, out);
+    __SIMD128_fastpackwithoutmask20_32(in, out);
     return;
 
   case 21:
-    __SIMD_fastpackwithoutmask21_32(in, out);
+    __SIMD128_fastpackwithoutmask21_32(in, out);
     return;
 
   case 22:
-    __SIMD_fastpackwithoutmask22_32(in, out);
+    __SIMD128_fastpackwithoutmask22_32(in, out);
     return;
 
   case 23:
-    __SIMD_fastpackwithoutmask23_32(in, out);
+    __SIMD128_fastpackwithoutmask23_32(in, out);
     return;
 
   case 24:
-    __SIMD_fastpackwithoutmask24_32(in, out);
+    __SIMD128_fastpackwithoutmask24_32(in, out);
     return;
 
   case 25:
-    __SIMD_fastpackwithoutmask25_32(in, out);
+    __SIMD128_fastpackwithoutmask25_32(in, out);
     return;
 
   case 26:
-    __SIMD_fastpackwithoutmask26_32(in, out);
+    __SIMD128_fastpackwithoutmask26_32(in, out);
     return;
 
   case 27:
-    __SIMD_fastpackwithoutmask27_32(in, out);
+    __SIMD128_fastpackwithoutmask27_32(in, out);
     return;
 
   case 28:
-    __SIMD_fastpackwithoutmask28_32(in, out);
+    __SIMD128_fastpackwithoutmask28_32(in, out);
     return;
 
   case 29:
-    __SIMD_fastpackwithoutmask29_32(in, out);
+    __SIMD128_fastpackwithoutmask29_32(in, out);
     return;
 
   case 30:
-    __SIMD_fastpackwithoutmask30_32(in, out);
+    __SIMD128_fastpackwithoutmask30_32(in, out);
     return;
 
   case 31:
-    __SIMD_fastpackwithoutmask31_32(in, out);
+    __SIMD128_fastpackwithoutmask31_32(in, out);
     return;
 
   case 32:
-    __SIMD_fastpackwithoutmask32_32(in, out);
+    __SIMD128_fastpackwithoutmask32_32(in, out);
     return;
 
   default:

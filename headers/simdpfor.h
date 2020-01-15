@@ -10,7 +10,7 @@
 
 #include "common.h"
 #include "codecs.h"
-#include "usimdbitpacking.h"
+#include "usimdbitpacking128.h"
 #include "util.h"
 
 namespace FastPForLib {
@@ -163,7 +163,7 @@ public:
   }
 
   void unpackblock(const uint32_t *source, uint32_t *out, const uint32_t bit) {
-    usimdunpack(reinterpret_cast<const __m128i *>(source), out, bit);
+    usimd128unpack(reinterpret_cast<const __m128i *>(source), out, bit);
   }
 
   void encodeArray(const uint32_t *in, const size_t len, uint32_t *out,

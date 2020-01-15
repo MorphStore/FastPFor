@@ -22,7 +22,7 @@
 #include "optpfor.h"
 #include "simdoptpfor.h"
 #include "fastpfor.h"
-#include "simdfastpfor.h"
+#include "simdfastpfor128.h"
 #include "variablebyte.h"
 #include "compositecodec.h"
 #include "blockpacking.h"
@@ -30,12 +30,12 @@
 #include "simdpfor.h"
 #include "pfor2008.h"
 #include "VarIntG8IU.h"
-#include "simdbinarypacking.h"
+#include "simdbinarypacking128.h"
 #include "snappydelta.h"
 #include "varintgb.h"
 #include "simdvariablebyte.h"
 #include "streamvariablebyte.h"
-#include "simdgroupsimple.h"
+#include "simdgroupsimple128.h"
 
 namespace FastPForLib {
 
@@ -102,7 +102,7 @@ static inline CodecMap initializefactory() {
   map["fastpfor256"] = std::shared_ptr<IntegerCODEC>(
       new CompositeCodec<FastPFor<8>, VariableByte>());
   map["simdfastpfor128"] = std::shared_ptr<IntegerCODEC>(
-      new CompositeCodec<SIMDFastPFor, VariableByte>());
+      new CompositeCodec<SIMDFastPFor128, VariableByte>());
   map["simplepfor"] = std::shared_ptr<IntegerCODEC>(
       new CompositeCodec<SimplePFor<>, VariableByte>());
   map["simdsimplepfor"] = std::shared_ptr<IntegerCODEC>(
@@ -143,12 +143,12 @@ static inline CodecMap initializefactory() {
 #ifdef USESNAPPY
   map["snappy"] = std::shared_ptr<IntegerCODEC>(new JustSnappy());
 #endif
-  map["simdbinarypacking"] = std::shared_ptr<IntegerCODEC>(
-      new CompositeCodec<SIMDBinaryPacking, VariableByte>());
-  map["simdgroupsimple"] = std::shared_ptr<IntegerCODEC>(
-      new CompositeCodec<SIMDGroupSimple<false, false>, VariableByte>());
-  map["simdgroupsimple_ringbuf"] = std::shared_ptr<IntegerCODEC>(
-      new CompositeCodec<SIMDGroupSimple<true, true>, VariableByte>());
+  map["simdbinarypacking128"] = std::shared_ptr<IntegerCODEC>(
+      new CompositeCodec<SIMDBinaryPacking128, VariableByte>());
+  map["simdgroupsimple128"] = std::shared_ptr<IntegerCODEC>(
+      new CompositeCodec<SIMDGroupSimple128<false, false>, VariableByte>());
+  map["simdgroupsimple128_ringbuf"] = std::shared_ptr<IntegerCODEC>(
+      new CompositeCodec<SIMDGroupSimple128<true, true>, VariableByte>());
   map["copy"] = std::shared_ptr<IntegerCODEC>(new JustCopy());
   return map;
 }

@@ -5,8 +5,8 @@
  * (c) Daniel Lemire, http://lemire.me/en/
  */
 
-#ifndef SIMDGROUPSIMPLE_H_
-#define SIMDGROUPSIMPLE_H_
+#ifndef SIMDGROUPSIMPLE128_H_
+#define SIMDGROUPSIMPLE128_H_
 
 #include "common.h"
 #include "codecs.h"
@@ -32,17 +32,17 @@ namespace FastPForLib {
  * ====================
  * The first variant closely follows the original algorithm as described in the
  * paper. We also implemented the two optimizations mentioned in the paper:
- * - The calculation of pseudo quad max values instead of quad max values.
+ * - The calculation of pseudo group max values instead of group max values.
  * - One specialized (un)packing routine for each selector, whereby the
  *   appropriate routine is selected by a switch-case-statement.
  * However, our implementation differs from the paper in some minor points, for
  * instance, we directly look up the mask used in the pattern selection
  * algorithm instead of calculating it from a looked up bit width.
  * 
- * The variant using a quad max ring buffer
- * ========================================
+ * The variant using a group max ring buffer
+ * =========================================
  * The second variant is based on the original description, but uses a ring
- * buffer instead of an array for the (pseudo) quad max values to reduce the
+ * buffer instead of an array for the (pseudo) group max values to reduce the
  * size of the temporary data during the compression. More details on this can
  * be found in Section 3.2.3 of the following paper:
  * 
@@ -86,7 +86,7 @@ namespace FastPForLib {
  *          means a runtime overhead.
  * - true: There will be a pessimistic gap between the two areas. The reported
  *         compression rates will be misleading, unless we really have the
- *         worst case (each input quad contains at least one value of more than
+ *         worst case (each input group contains at least one value of more than
  *         16 bits). This causes no run time overhead, neither for the original
  *         nor for the variant using the ring buffer.
  * To sum up: For maximum performance use SIMDGroupSimple<false, false> or
@@ -100,16 +100,16 @@ namespace FastPForLib {
  * CompositeCodec.
  */
 template<bool useRingBuf, bool pessimisticGap>
-class SIMDGroupSimple : public IntegerCODEC {
+class SIMDGroupSimple128 : public IntegerCODEC {
 public:
   // Tell CompositeCodec that this implementation can only handle input sizes
   // which are multiples of four.
-  static const uint32_t BlockSize = 4;
+  static const uint32_t BlockSize = sizeof(__m128i) / sizeof(uint32_t);
 
   // The header consists of three 32-bit integers.
   static const uint32_t countHeader32 = 3;
 
-  // Lookup table. Key: a selector, value: the number of quads to be packed
+  // Lookup table. Key: a selector, value: the number of groups to be packed
   // into one compressed block with the specified selector.
   static const uint8_t tableNum[];
   // Lookup table. Key: a selector, value: the mask required in the pattern
@@ -143,7 +143,7 @@ public:
   }
 
   /**
-   * This function is used to compress the n quads, i.e. 4x n integers, in the
+   * This function is used to compress the n groups, i.e. 4x n integers, in the
    * last input block, if that last block is not "full". Note that this
    * function is called at most once per array to compress. Hence, top
    * efficiency is not that crucial here.
@@ -162,7 +162,7 @@ public:
 
   /**
    * The following ten functions pack a certain amount of uncompressed data.
-   * The function unrolledPacking_#n_#b packs #n quads, i.e., 4x #n integers,
+   * The function unrolledPacking_#n_#b packs #n groups, i.e., 4x #n integers,
    * into one 128-bit compressed block.
    */
 
@@ -293,7 +293,7 @@ public:
   }
 
   /**
-   * Compresses n quads, i.e. 4x n integers. Thereby, n must correspond to one
+   * Compresses n groups, i.e. 4x n integers. Thereby, n must correspond to one
    * of the ten compression modes presented in the original paper.
    */
   inline static void comprCompleteBlock(const uint8_t &n, const __m128i *&in,
@@ -339,7 +339,7 @@ public:
   }
 
   /**
-   * This function is used to decompress the n quads, i.e. 4x n integers, in
+   * This function is used to decompress the n groups, i.e. 4x n integers, in
    * the last input block, if that last block is not "full". Note that this
    * function is called at most once per array to decompress. Hence, top
    * efficiency is not that crucial here.
@@ -358,7 +358,7 @@ public:
 
   /**
    * The following ten functions unpack a certain amount of compressed data.
-   * The function unrolledUnpacking_#n_#b unpacks #n quads, i.e., 4x #n
+   * The function unrolledUnpacking_#n_#b unpacks #n groups, i.e., 4x #n
    * integers, from one 128-bit compressed block.
    */
 
@@ -499,7 +499,7 @@ public:
   }
 
   /**
-   * Decompresses n quads, i.e. 4x n integers. Thereby, n must correspond to
+   * Decompresses n groups, i.e. 4x n integers. Thereby, n must correspond to
    * one of the ten compression modes presented in the original paper.
    */
   inline static void decomprCompleteBlock(const uint8_t &n,const __m128i *&in,
@@ -554,16 +554,19 @@ public:
         reinterpret_cast<uint8_t *>(outHeader32 + countHeader32);
     uint8_t *const initOutSelArea8 = outSelArea8;
 
-    // The number of input quads, i.e., groups of four integers. Note that we
+    // The number of input groups, i.e., groups of four integers. Note that we
     // assume the number of input integers to be a multiple of four.
     const size_t countIn128 = len * sizeof(uint32_t) / sizeof(__m128i);
 
-    // Step 1: Generation of the quad max array
-    // ========================================
-    uint32_t *quadMaxArray = new uint32_t[countIn128];
-    for (size_t i = 0; i < len; i += 4) {
-      const uint32_t pseudoQuadMax = in[i] | in[i + 1] | in[i + 2] | in[i + 3];
-      quadMaxArray[i >> 2] = pseudoQuadMax;
+    // Step 1: Generation of the group max array
+    // =========================================
+    uint32_t *groupMaxArray = new uint32_t[countIn128];
+    const unsigned countVectorElements = sizeof(__m128i) / sizeof(uint32_t);
+    for (size_t i = 0; i < len; i += countVectorElements) {
+      const uint32_t pseudoGroupMax =
+          in[i     ] | in[i +  1] | in[i +  2] | in[i +  3]
+      ;
+      groupMaxArray[i / countVectorElements] = pseudoGroupMax;
     }
 
     // Step 2: Pattern selection algorithm
@@ -583,7 +586,7 @@ public:
         const uint32_t mask = tableMask[i];
         pos = 0;
         const size_t maxPos = min(static_cast<size_t>(n), l);
-        while (pos < maxPos && quadMaxArray[j + pos] <= mask)
+        while (pos < maxPos && groupMaxArray[j + pos] <= mask)
           pos++;
         if (pos == maxPos)
           break;
@@ -600,11 +603,11 @@ public:
     if (!even)
       // The last used byte in the selectors area was touched, but not finished.
       outSelArea8++;
-    // The number of quads in the last block.
-    const uint8_t countQuadsLastBlock = static_cast<uint8_t>(pos);
-    *outSelArea8 = countQuadsLastBlock;
+    // The number of groups in the last block.
+    const uint8_t countGroupsLastBlock = static_cast<uint8_t>(pos);
+    *outSelArea8 = countGroupsLastBlock;
 
-    delete[] quadMaxArray;
+    delete[] groupMaxArray;
 
     // The number of bytes actually used for the selectors area.
     const size_t countSelArea8Used = outSelArea8 - initOutSelArea8;
@@ -640,8 +643,8 @@ public:
       const size_t n = tableNum[i];
       comprCompleteBlock(n, in128, outDataArea128);
     }
-    if (countQuadsLastBlock)
-      comprIncompleteBlock(countQuadsLastBlock, in128, outDataArea128);
+    if (countGroupsLastBlock)
+      comprIncompleteBlock(countGroupsLastBlock, in128, outDataArea128);
 
     // Write some meta data to the header.
     outHeader32[0] = len;
@@ -661,7 +664,7 @@ public:
 
   /**
    * The variant of the compression part using a ring buffer for the pseudo
-   * quad max values.
+   * group max values.
    */
   inline static void encodeArrayInternal_wRingBuf(const uint32_t *in,
                                                   const size_t len,
@@ -674,17 +677,17 @@ public:
         reinterpret_cast<uint8_t *>(outHeader32 + countHeader32);
     uint8_t *const initOutSelArea8 = outSelArea8;
 
-    // The number of input quads, i.e., groups of four integers. Note that we
+    // The number of input groups, i.e., groups of four integers. Note that we
     // assume the number of input integers to be a multiple of four.
     const size_t countIn128 = len * sizeof(uint32_t) / sizeof(__m128i);
 
-    // Maximum size of the quad max ring buffer. Note that to determine the
-    // next selector, we need to consider at most 32 pseudo quad max values,
-    // since that is the maximum number of input quads to be packed into one
+    // Maximum size of the group max ring buffer. Note that to determine the
+    // next selector, we need to consider at most 32 pseudo group max values,
+    // since that is the maximum number of input groups to be packed into one
     // compressed block.
     const size_t rbMaxSize = 32;
-    // The quad max ring buffer.
-    uint32_t quadMaxRb[rbMaxSize];
+    // The group max ring buffer.
+    uint32_t groupMaxRb[rbMaxSize];
     // The current position and number of valid elements in the ring buffer.
     size_t rbPos = 0;
     size_t rbSize = 0;
@@ -708,21 +711,24 @@ public:
     const __m128i *const endIn128 = in128 + countIn128;
 
     // The following loop interleaves all three steps of the original
-    // algorithm: (1) the generation of the pseudo quad max values, (2) the
+    // algorithm: (1) the generation of the pseudo group max values, (2) the
     // pattern selection algorithm, and (3) the packing of the input blocks.
 
     // Whether we have an even number of selectors so far.
     bool even = true;
     size_t pos = 0;
     while (in128 < endIn128) {
-      // Step 1: Refill the quad max ring buffer.
+      // Step 1: Refill the group max ring buffer.
       const size_t countRemainingIn128 = static_cast<size_t>(endIn128 - in128);
       const size_t rbSizeToReach = min(rbMaxSize, countRemainingIn128);
       for (; rbSize < rbSizeToReach; rbSize++) {
         const uint32_t *const in32 =
             reinterpret_cast<const uint32_t *>(in128 + rbSize);
-        const uint32_t pseudoQuadMax = in32[0] | in32[1] | in32[2] | in32[3];
-        quadMaxRb[(rbPos + rbSize) % rbMaxSize] = pseudoQuadMax;
+        // TODO can't this be vectorized somehow?
+        const uint32_t pseudoGroupMax =
+            in32[0] | in32[1] | in32[2] | in32[3]
+        ;
+        groupMaxRb[(rbPos + rbSize) % rbMaxSize] = pseudoGroupMax;
       }
 
       // Step 2: Determine the next selector.
@@ -734,7 +740,7 @@ public:
         const uint32_t mask = tableMask[i];
         pos = 0;
         const size_t maxPos = min(static_cast<size_t>(n), rbSize);
-        while (pos < maxPos && quadMaxRb[(rbPos + pos) % rbMaxSize] <= mask)
+        while (pos < maxPos && groupMaxRb[(rbPos + pos) % rbMaxSize] <= mask)
           pos++;
         if (pos == maxPos)
           break;
@@ -762,9 +768,9 @@ public:
       // The last used byte in the selectors area was touched, but not finished.
       outSelArea8++;
 
-    // The number of quads in the last, possibly non-"full" block.
-    const uint8_t countQuadsLastBlock = static_cast<uint8_t>(pos);
-    *outSelArea8 = countQuadsLastBlock;
+    // The number of groups in the last, possibly non-"full" block.
+    const uint8_t countGroupsLastBlock = static_cast<uint8_t>(pos);
+    *outSelArea8 = countGroupsLastBlock;
 
     // The number of bytes actually used for the selectors area.
     const size_t countSelArea8Used = outSelArea8 - initOutSelArea8;
@@ -859,16 +865,16 @@ public:
       const size_t n = tableNum[i];
       decomprCompleteBlock(n, inDataArea128, out128);
     }
-    const uint8_t countQuadsLastBlock = inSelArea8[countSelArea8Used];
-    if (countQuadsLastBlock)
-      decomprIncompleteBlock(countQuadsLastBlock, inDataArea128, out128);
+    const uint8_t countGroupsLastBlock = inSelArea8[countSelArea8Used];
+    if (countGroupsLastBlock)
+      decomprIncompleteBlock(countGroupsLastBlock, inDataArea128, out128);
 
     return reinterpret_cast<const uint32_t *>(inDataArea128);
   }
 
   virtual std::string name() const {
     std::ostringstream convert;
-    convert << "SIMDGroupSimple";
+    convert << "SIMDGroupSimple128";
     if (useRingBuf)
       convert << "_RingBuf";
     return convert.str();
@@ -876,11 +882,11 @@ public:
 };
 
 template<bool useRingBuf, bool pessimisticGap>
-const uint8_t SIMDGroupSimple<useRingBuf, pessimisticGap>::tableNum[] = {
+const uint8_t SIMDGroupSimple128<useRingBuf, pessimisticGap>::tableNum[] = {
   32, 16, 10, 8, 6, 5, 4, 3, 2, 1
 };
 template<bool useRingBuf, bool pessimisticGap>
-const uint32_t SIMDGroupSimple<useRingBuf, pessimisticGap>::tableMask[] = {
+const uint32_t SIMDGroupSimple128<useRingBuf, pessimisticGap>::tableMask[] = {
   (static_cast<uint64_t>(1) <<  1) - 1,
   (static_cast<uint64_t>(1) <<  2) - 1,
   (static_cast<uint64_t>(1) <<  3) - 1,
@@ -895,4 +901,4 @@ const uint32_t SIMDGroupSimple<useRingBuf, pessimisticGap>::tableMask[] = {
 
 } // namespace FastPFor
 
-#endif /* SIMDGROUPSIMPLE_H_ */
+#endif /* SIMDGROUPSIMPLE128_H_ */

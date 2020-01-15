@@ -11,7 +11,7 @@
 #include <vector>
 #include "util.h"
 #include "bitpackinghelpers.h"
-#include "simdbitpacking.h"
+#include "simdbitpacking128.h"
 #include "rolledbitpacking.h"
 #include "synthetic.h"
 #include "ztimer.h"
@@ -57,7 +57,7 @@ void simdpack(const vector<uint32_t, cacheallocator> &data,
               vector<uint32_t, cacheallocator> &out, const uint32_t bit) {
   const size_t N = data.size();
   for (size_t k = 0; k < N / 128; ++k) {
-    SIMD_fastpack_32(&data[0] + 128 * k,
+    SIMD128_fastpack_32(&data[0] + 128 * k,
                      reinterpret_cast<__m128i *>(&out[0] + 4 * bit * k), bit);
   }
 }
@@ -67,7 +67,7 @@ void simdpackwithoutmask(const vector<uint32_t, cacheallocator> &data,
                          const uint32_t bit) {
   const size_t N = data.size();
   for (size_t k = 0; k < N / 128; ++k) {
-    SIMD_fastpackwithoutmask_32(
+    SIMD128_fastpackwithoutmask_32(
         &data[0] + 128 * k, reinterpret_cast<__m128i *>(&out[0] + 4 * bit * k),
         bit);
   }
@@ -77,7 +77,7 @@ void simdunpack(const vector<uint32_t, cacheallocator> &data,
                 vector<uint32_t, cacheallocator> &out, const uint32_t bit) {
   const size_t N = out.size();
   for (size_t k = 0; k < N / 128; ++k) {
-    SIMD_fastunpack_32(
+    SIMD128_fastunpack_32(
         reinterpret_cast<const __m128i *>(&data[0] + 4 * bit * k),
         &out[0] + 128 * k, bit);
   }

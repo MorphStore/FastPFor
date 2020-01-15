@@ -4,16 +4,16 @@
  *
  * (c) Daniel Lemire, http://lemire.me/en/
  */
-#ifndef SIMDFASTPFOR_H_
-#define SIMDFASTPFOR_H_
+#ifndef SIMDFASTPFOR128_H_
+#define SIMDFASTPFOR128_H_
 
 #include "common.h"
 #include "codecs.h"
-#include "simdbitpacking.h"
-#include "usimdbitpacking.h"
+#include "simdbitpacking128.h"
+#include "usimdbitpacking128.h"
 #include "memutil.h"
 #include "util.h"
-#include "usimdbitpacking.h"
+
 
 namespace FastPForLib {
 
@@ -38,45 +38,50 @@ namespace FastPForLib {
  *
  * Designed by D. Lemire with ideas from Leonid Boytsov. This scheme is NOT
  * patented.
+ * 
+ * Uses 128-bit SSE SIMD instructions.
  *
  */
-class SIMDFastPFor : public IntegerCODEC {
+class SIMDFastPFor128 : public IntegerCODEC {
 public:
+  // TODO put this constant in a central place
+  static const unsigned bitsPerByte = 8;
+  
   /**
    * ps (page size) should be a multiple of BlockSize, any "large"
    * value should do.
    */
-  SIMDFastPFor(uint32_t ps = 65536)
+  SIMDFastPFor128(uint32_t ps = 65536)
       : PageSize(ps), bitsPageSize(gccbits(PageSize)), datatobepacked(33),
         bytescontainer(PageSize + 3 * PageSize / BlockSize) {
     assert(ps / BlockSize * BlockSize == ps);
     assert(gccbits(BlockSizeInUnitsOfPackSize * PACKSIZE - 1) <= 8);
   }
+      
   enum {
     PACKSIZE = 32,
     overheadofeachexcept = 8,
     overheadduetobits = 8,
     overheadduetonmbrexcept = 8,
-    BlockSizeInUnitsOfPackSize = 4,
-    BlockSize = BlockSizeInUnitsOfPackSize * PACKSIZE
+    BlockSize = sizeof(__m128i) * bitsPerByte
   };
 
   static uint32_t *packblockupsimd(const uint32_t *source, uint32_t *out,
                                    const uint32_t bit) {
-    for (int k = 0; k < BlockSize; k += 128) {
-      SIMD_fastpack_32(source, reinterpret_cast<__m128i *>(out), bit);
-      out += 4 * bit;
-      source += 128;
+    for (int k = 0; k < BlockSize; k += sizeof(__m128i) * bitsPerByte) {
+      SIMD128_fastpack_32(source, reinterpret_cast<__m128i *>(out), bit);
+      out += sizeof(__m128i) / sizeof(uint32_t) * bit;
+      source += sizeof(__m128i) * bitsPerByte;
     }
     return out;
   }
 
   static const uint32_t *unpackblocksimd(const uint32_t *source, uint32_t *out,
                                          const uint32_t bit) {
-    for (int k = 0; k < BlockSize; k += 128) {
-      SIMD_fastunpack_32(reinterpret_cast<const __m128i *>(source), out, bit);
-      source += 4 * bit;
-      out += 128;
+    for (int k = 0; k < BlockSize; k += sizeof(__m128i) * bitsPerByte) {
+      SIMD128_fastunpack_32(reinterpret_cast<const __m128i *>(source), out, bit);
+      source += sizeof(__m128i) / sizeof(uint32_t) * bit;
+      out += sizeof(__m128i) * bitsPerByte;
     }
     return source;
   }
@@ -88,9 +93,9 @@ public:
     ++in;
     out.resize((size + 32 - 1) / 32 * 32);
     uint32_t j = 0;
-    for (; j + 128 <= size; j += 128) {
-      usimdunpack(reinterpret_cast<const __m128i *>(in), &out[j], bit);
-      in += 4 * bit;
+    for (; j + sizeof(__m128i) * bitsPerByte <= size; j += sizeof(__m128i) * bitsPerByte) {
+      usimd128unpack(reinterpret_cast<const __m128i *>(in), &out[j], bit);
+      in += sizeof(__m128i) / sizeof(uint32_t) * bit;
     }
     for (; j + 31 < size; j += 32) {
       fastunpack(in, &out[j], bit);
@@ -120,9 +125,9 @@ public:
       return out;
     source.resize((source.size() + 32 - 1) / 32 * 32);
     uint32_t j = 0;
-    for (; j + 128 <= size; j += 128) {
-      usimdpackwithoutmask(&source[j], reinterpret_cast<__m128i *>(out), bit);
-      out += 4 * bit;
+    for (; j + sizeof(__m128i) * bitsPerByte <= size; j += sizeof(__m128i) * bitsPerByte) {
+      usimd128packwithoutmask(&source[j], reinterpret_cast<__m128i *>(out), bit);
+      out += sizeof(__m128i) / sizeof(uint32_t) * bit;
     }
     for (; j < size; j += 32) {
       fastpackwithoutmask(&source[j], out, bit);
@@ -342,7 +347,7 @@ public:
   }
 
   std::string name() const {
-    return std::string("SIMDFastPFor") + std::to_string(BlockSize);
+    return std::string("SIMDFastPFor_") + std::to_string(sizeof(__m128i) * bitsPerByte);
   }
 };
 
@@ -536,7 +541,7 @@ public:
       const uint8_t cexcept = *bytep++;
       // in = unpackblock<BlockSize>(in, out, b);
       assert(BlockSize == 128);
-      usimdunpack(reinterpret_cast<const __m128i *>(in), out, b);
+      usimd128unpack(reinterpret_cast<const __m128i *>(in), out, b);
       in += BlockSizeInUnitsOfPackSize * b;
       for (uint32_t k = 0; k < cexcept; ++k) {
         const uint8_t pos = *(bytep++);
@@ -551,4 +556,4 @@ public:
 
 } // namespace FastPFor
 
-#endif /* SIMDFASTPFOR_H_ */
+#endif /* SIMDFASTPFOR128_H_ */
