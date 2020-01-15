@@ -108,7 +108,11 @@ add_library(FastPFor STATIC src/bitpacking.cpp
                                 src/bitpackingunaligned.cpp
                                 src/horizontalbitpacking.cpp
                                 src/simdunalignedbitpacking128.cpp
+                                src/simdunalignedbitpacking256.cpp
+                                src/simdunalignedbitpacking512.cpp
                                 src/simdbitpacking128.cpp
+                                src/simdbitpacking256.cpp
+                                src/simdbitpacking512.cpp
                                 src/varintdecode.c
                                 src/streamvbyte.c
 								${HEADERS}

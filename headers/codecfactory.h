@@ -37,6 +37,17 @@
 #include "streamvariablebyte.h"
 #include "simdgroupsimple128.h"
 
+#ifdef __AVX2__
+#include "simdfastpfor256.h"
+#include "simdbinarypacking256.h"
+#include "simdgroupsimple256.h"
+#endif
+#ifdef __AVX512F__
+#include "simdbinarypacking512.h"
+#include "simdfastpfor512.h"
+#include "simdgroupsimple512.h"
+#endif
+
 namespace FastPForLib {
 
 typedef std::map<std::string, std::shared_ptr<IntegerCODEC>> CodecMap;
@@ -149,6 +160,26 @@ static inline CodecMap initializefactory() {
       new CompositeCodec<SIMDGroupSimple128<false, false>, VariableByte>());
   map["simdgroupsimple128_ringbuf"] = std::shared_ptr<IntegerCODEC>(
       new CompositeCodec<SIMDGroupSimple128<true, true>, VariableByte>());
+#ifdef __AVX2__
+  map["simdbinarypacking256"] = std::shared_ptr<IntegerCODEC>(
+      new CompositeCodec<SIMDBinaryPacking256, VariableByte>());
+  map["simdfastpfor256"] = std::shared_ptr<IntegerCODEC>(
+      new CompositeCodec<SIMDFastPFor256, VariableByte>());
+  map["simdgroupsimple256"] = std::shared_ptr<IntegerCODEC>(
+      new CompositeCodec<SIMDGroupSimple256<false, false>, VariableByte>());
+  map["simdgroupsimple256_ringbuf"] = std::shared_ptr<IntegerCODEC>(
+      new CompositeCodec<SIMDGroupSimple256<true, true>, VariableByte>());
+#endif
+#ifdef __AVX512F__
+  map["simdbinarypacking512"] = std::shared_ptr<IntegerCODEC>(
+      new CompositeCodec<SIMDBinaryPacking512, VariableByte>());
+  map["simdfastpfor512"] = std::shared_ptr<IntegerCODEC>(
+      new CompositeCodec<SIMDFastPFor512, VariableByte>());
+  map["simdgroupsimple512"] = std::shared_ptr<IntegerCODEC>(
+      new CompositeCodec<SIMDGroupSimple512<false, false>, VariableByte>());
+  map["simdgroupsimple512_ringbuf"] = std::shared_ptr<IntegerCODEC>(
+      new CompositeCodec<SIMDGroupSimple512<true, true>, VariableByte>());
+#endif
   map["copy"] = std::shared_ptr<IntegerCODEC>(new JustCopy());
   return map;
 }

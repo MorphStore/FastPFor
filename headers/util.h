@@ -71,6 +71,19 @@ __attribute__((const)) const T *padTo128bits(const T *inbyte) {
       (reinterpret_cast<uintptr_t>(inbyte) + 15) & ~15);
 }
 
+// TODO for some reason, calling this causes compilation errors
+template <class T> __attribute__((const)) T *padTo256bits(T *inbyte) {
+  return reinterpret_cast<T *>((reinterpret_cast<uintptr_t>(inbyte) + 31) &
+                               ~31);
+}
+
+// TODO for some reason, calling this causes compilation errors
+template <class T>
+__attribute__((const)) const T *padTo256bits(const T *inbyte) {
+  return reinterpret_cast<const T *>(
+      (reinterpret_cast<uintptr_t>(inbyte) + 31) & ~31);
+}
+
 template <class T> __attribute__((const)) T *padTo64bytes(T *inbyte) {
   return reinterpret_cast<T *>((reinterpret_cast<uintptr_t>(inbyte) + 63) &
                                ~63);
@@ -95,6 +108,12 @@ __attribute__((const)) bool needPaddingTo64Bits(const T *inbyte) {
 template <class T>
 __attribute__((const)) bool needPaddingTo128Bits(const T *inbyte) {
   return (reinterpret_cast<uintptr_t>(inbyte) & 15) != 0;
+}
+
+// TODO for some reason, calling this causes compilation errors
+template <class T>
+__attribute__((const)) bool needPaddingTo256Bits(const T *inbyte) {
+  return (reinterpret_cast<uintptr_t>(inbyte) & 31) != 0;
 }
 
 template <class T> bool needPaddingTo64bytes(const T *inbyte) {
