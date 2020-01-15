@@ -4,6 +4,16 @@
  *
  * (c) Daniel Lemire
  */
+
+// ****************************************************************************
+// This is a port of a modified version of the original SSE implementation to
+// AVX2. We do not claim that this code makes optimal use of AVX2. Instead,
+// it was deliberately ported in a straighforward way, mainly by substituting
+// the SSE intrinsics for their AVX2 equivalents. This required an increase
+// of the block size. You can find the original implementation by Daniel Lemire
+// et. al at https://github.com/lemire/FastPFOR .
+// ****************************************************************************
+
 #ifndef USIMDBITPACKING256_H_
 #define USIMDBITPACKING256_H_
 

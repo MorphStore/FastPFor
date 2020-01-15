@@ -1,3 +1,47 @@
+## What is this fork/branch?
+
+Ports of SIMD-BP, SIMD-FastPFor, and SIMD-Group-Simple from SSE to AVX2 and
+AVX-512. We do not claim that these ports make optimal use of AVX2 and AVX-512.
+Instead, they are deliberately straightforward ports in the sense that we
+mainly substituted the SSE intrinsics for their AVX2/AVX-512 counterparts. As a
+consequence, the block sizes of these algorithms had to be increased by factors
+of 2 and 4, respectively. Moreover, the straightforward AVX-512 port of
+SIMD-FastPFor uses two bytes to store an exception position.
+
+The names of the algorithms are suffixed with the vector width of the
+respective SIMD extension. In particular, there are now (see 
+`headers/codecfactory.h`):
+- simdbinarypacking128
+- simdbinarypacking256
+- simdbinarypacking512
+- simdfastpfor128
+- simdfastpfor256
+- simdfastpfor512
+- simdgroupsimple128
+- simdgroupsimple128_ringbuf
+- simdgroupsimple256
+- simdgroupsimple256_ringbuf
+- simdgroupsimple512
+- simdgroupsimple512_ringbuf
+
+Note that the ports are based on an older version of the FastPFor-library.
+
+We used these ports for the following publications:
+
+- Patrick Damme, Annett Ungethüm, Juliana Hildebrandt, Dirk Habich, Wolfgang
+  Lehner:
+  "From a Comprehensive Experimental Survey to a Cost-based Selection Strategy
+  for Lightweight Integer Compression Algorithms".
+  ACM Trans. Database Syst. 44(3): 9:1-9:46 (2019)
+- Mikhail Zarubin, Patrick Damme, Thomas Kissinger, Dirk Habich, Wolfgang
+  Lehner, Thomas Willhalm:
+  "Integer Compression in NVRAM-centric Data Stores: Comparative Experimental
+  Analysis to DRAM".
+  DaMoN 2019: 11:1-11:11
+
+Note that the original implementations by Daniel Lemire et al. can be found at
+https://github.com/lemire/FastPFOR .
+
 # The FastPFOR C++ library : Fast integer compression
 [![Build Status](https://travis-ci.org/lemire/FastPFor.png)](https://travis-ci.org/lemire/FastPFor)
 [![Build Status](https://img.shields.io/appveyor/ci/lemire/FastPFor.svg)](https://ci.appveyor.com/project/lemire/FastPFor)

@@ -4,6 +4,15 @@
  *
  * (c) Daniel Lemire, http://lemire.me/en/
  */
+
+// ****************************************************************************
+// This is a modified version of the original file from the FastPFor-library.
+// The filename was suffixed with "128" to indicate that the code uses SSE.
+// Furthermore, several changes were made in the code to make it easier to port
+// to AVX2 and AVX-512. You can find the original implementation by Daniel
+// Lemire et. al at https://github.com/lemire/FastPFOR .
+// ****************************************************************************
+
 #ifndef SIMDFASTPFOR128_H_
 #define SIMDFASTPFOR128_H_
 
